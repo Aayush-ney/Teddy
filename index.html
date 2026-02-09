@@ -116,6 +116,13 @@
             color: #4fc3f7;
             margin-bottom: 10px;
             font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .point h3 .icon {
+            font-size: 1.5rem;
         }
 
         .point ul {
@@ -136,6 +143,28 @@
             left: 0;
         }
 
+        .security-badge {
+            display: inline-block;
+            background: rgba(244, 67, 54, 0.2);
+            color: #ff8a80;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .tech-badge {
+            display: inline-block;
+            background: rgba(76, 175, 80, 0.2);
+            color: #a5d6a7;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
         .image-container {
             display: flex;
             align-items: center;
@@ -144,18 +173,6 @@
             border-radius: 15px;
             background: rgba(0, 0, 0, 0.3);
             border: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-        }
-
-        .image-container img.loaded {
-            opacity: 1;
         }
 
         .image-placeholder {
@@ -216,56 +233,52 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Special animations for different slides */
-        .network-hierarchy {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 30px;
+        /* Tech Specifications Grid */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
         }
 
-        .hierarchy-circle {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            transform: scale(0);
-            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        .tech-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .hierarchy-circle.animate {
-            transform: scale(1);
+        .tech-item strong {
+            color: #4fc3f7;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
         }
 
-        .pan-circle {
-            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
-            width: 100px;
-            height: 100px;
+        /* Network Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        .lan-circle {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
-            width: 150px;
-            height: 150px;
+        .comparison-table th {
+            background: rgba(79, 195, 247, 0.3);
+            padding: 15px;
+            text-align: left;
+            border-bottom: 2px solid #4fc3f7;
         }
 
-        .man-circle {
-            background: linear-gradient(45deg, #ffd166, #ffb347);
-            width: 200px;
-            height: 200px;
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .wan-circle {
-            background: linear-gradient(45deg, #118ab2, #073b4c);
-            width: 250px;
-            height: 250px;
+        .comparison-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
         }
 
+        /* Quiz Styles */
         .quiz-option {
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;
@@ -274,6 +287,23 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-option:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .quiz-option:hover:before {
+            left: 100%;
         }
 
         .quiz-option:hover {
@@ -284,11 +314,39 @@
         .quiz-option.correct {
             background: rgba(76, 175, 80, 0.3);
             border-color: #4caf50;
+            animation: pulseCorrect 0.5s ease;
         }
 
         .quiz-option.wrong {
             background: rgba(244, 67, 54, 0.3);
             border-color: #f44336;
+            animation: shake 0.5s ease;
+        }
+
+        .quiz-humor {
+            background: linear-gradient(45deg, #ff6b6b, #ffd166);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px dashed #ffd166;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px #ffd166; }
+            to { box-shadow: 0 0 20px #ff6b6b; }
+        }
+
+        @keyframes pulseCorrect {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
 
         /* Scrollbar Styling */
@@ -337,6 +395,10 @@
                 padding: 10px 20px;
                 font-size: 0.9rem;
             }
+            
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -348,16 +410,25 @@
             <div class="slide-content">
                 <div class="points-container">
                     <div class="point visible" style="transition-delay: 0.1s">
-                        <h3>Types of Computer Networks</h3>
-                        <p>Based on Geographical Area</p>
+                        <h3><span class="icon">🌐</span> Types of Computer Networks</h3>
+                        <p>Based on Geographical Area with Security & Tech Deep Dive</p>
                     </div>
                     <div class="point visible" style="transition-delay: 0.3s">
-                        <h3>Presentation Overview</h3>
+                        <h3><span class="icon">🎯</span> Presentation Overview</h3>
                         <ul>
                             <li>From Personal to Global Networks</li>
-                            <li>Technology & Applications</li>
-                            <li>Interactive Comparison</li>
-                            <li>Real-world Examples</li>
+                            <li>Technology & Security Analysis</li>
+                            <li>Interactive Quiz with Humor</li>
+                            <li>Real-world Applications</li>
+                        </ul>
+                    </div>
+                    <div class="point visible" style="transition-delay: 0.5s">
+                        <h3><span class="icon">⚡</span> Key Learning Points</h3>
+                        <ul>
+                            <li>Network Security at Each Level</li>
+                            <li>Technology Evolution</li>
+                            <li>Performance vs. Security Trade-offs</li>
+                            <li>Future Trends</li>
                         </ul>
                     </div>
                 </div>
@@ -366,86 +437,57 @@
                         <div>
                             <h3>🌐 Global Connectivity</h3>
                             <p>Understanding how networks scale from personal devices to worldwide systems</p>
+                            <div style="margin-top: 20px; font-size: 4rem;">🚀</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 2: Introduction -->
+        <!-- Slide 2: PAN Enhanced -->
         <div class="slide" id="slide2">
-            <h1 class="slide-title">Why Scale Matters?</h1>
-            <div class="slide-content">
-                <div class="points-container">
-                    <div class="point">
-                        <h3>Networks are Like Social Circles</h3>
-                        <ul>
-                            <li>Some are for a room</li>
-                            <li>Some for a city</li>
-                            <li>Some for the entire planet!</li>
-                        </ul>
-                    </div>
-                    <div class="point">
-                        <h3>Geographical Area Determines:</h3>
-                        <ul>
-                            <li><strong>Technology</strong> used (Cables, Wi-Fi, Satellites)</li>
-                            <li><strong>Speed & Performance</strong></li>
-                            <li><strong>Cost & Complexity</strong></li>
-                        </ul>
-                    </div>
-                    <div class="point">
-                        <h3>The Hierarchy</h3>
-                        <ul>
-                            <li>PAN → Personal Area Network</li>
-                            <li>LAN → Local Area Network</li>
-                            <li>MAN → Metropolitan Area Network</li>
-                            <li>WAN → Wide Area Network</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="image-container">
-                    <div class="image-placeholder">
-                        <div>
-                            <h3>📊 Scale Hierarchy</h3>
-                            <p>Room → Building → City → World</p>
-                            <div style="margin-top: 20px; font-size: 3rem;">🔍</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 3: PAN -->
-        <div class="slide" id="slide3">
             <h1 class="slide-title">PAN – Personal Area Network</h1>
             <div class="slide-content">
                 <div class="points-container">
                     <div class="point">
-                        <h3>Your Own Digital Bubble!</h3>
+                        <h3><span class="icon">👤</span> Your Digital Bubble</h3>
                         <ul>
-                            <li><strong>Range:</strong> 10 meters (Within arm's reach)</li>
-                            <li><strong>Purpose:</strong> Connecting personal devices</li>
-                            <li><strong>Key Technology:</strong> Bluetooth, USB, Infrared</li>
+                            <li><strong>Range:</strong> 1-10 meters (Within arm's reach)</li>
+                            <li><strong>Speed:</strong> 1-24 Mbps (Bluetooth 5.3: 3 Mbps)</li>
+                            <li><strong>Topology:</strong> Point-to-point, Star</li>
+                            <li><strong>Cost:</strong> Low to negligible</li>
                         </ul>
                     </div>
                     <div class="point">
-                        <h3>Examples:</h3>
+                        <h3><span class="icon">🔒</span> Security Features <span class="security-badge">MEDIUM RISK</span></h3>
                         <ul>
-                            <li>Wireless mouse to laptop</li>
-                            <li>Smartphone to wireless earbuds</li>
-                            <li>Smartwatch syncing with phone</li>
-                            <li>Wireless keyboard connection</li>
-                            <li>Phone to fitness tracker</li>
+                            <li>Pairing codes & device authentication</li>
+                            <li>Frequency hopping (Bluetooth)</li>
+                            <li>Limited range provides physical security</li>
+                            <li><strong>Vulnerabilities:</strong> Bluejacking, Bluesnarfing</li>
+                            <li><strong>Protection:</strong> Disable discoverability</li>
                         </ul>
                     </div>
                     <div class="point">
-                        <h3>Characteristics:</h3>
-                        <ul>
-                            <li>Low power consumption</li>
-                            <li>Short-range communication</li>
-                            <li>Easy to set up and use</li>
-                            <li>Perfect for personal use</li>
-                        </ul>
+                        <h3><span class="icon">💻</span> Technology Deep Dive</h3>
+                        <div class="tech-grid">
+                            <div class="tech-item">
+                                <strong>Bluetooth</strong>
+                                Versions: 1.0 to 5.3
+                            </div>
+                            <div class="tech-item">
+                                <strong>NFC</strong>
+                                13.56 MHz, 424 kbps
+                            </div>
+                            <div class="tech-item">
+                                <strong>Zigbee</strong>
+                                250 kbps, Mesh networking
+                            </div>
+                            <div class="tech-item">
+                                <strong>Infrared</strong>
+                                Line-of-sight, 4 Mbps
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="image-container">
@@ -454,44 +496,60 @@
                             <h3>👤 Personal Area Network</h3>
                             <p>Person surrounded by connected devices</p>
                             <div style="margin-top: 20px; font-size: 4rem;">🎧📱⌚💻</div>
+                            <div style="margin-top: 20px; font-size: 1rem; opacity: 0.8;">
+                                Security: Medium | Speed: Low | Range: Personal
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 4: LAN -->
-        <div class="slide" id="slide4">
+        <!-- Slide 3: LAN Enhanced -->
+        <div class="slide" id="slide3">
             <h1 class="slide-title">LAN – Local Area Network</h1>
             <div class="slide-content">
                 <div class="points-container">
                     <div class="point">
-                        <h3>The Home & Office Hero</h3>
+                        <h3><span class="icon">🏠</span> The Local Workhorse</h3>
                         <ul>
-                            <li><strong>Range:</strong> Single building or campus</li>
-                            <li><strong>Speed:</strong> High speed & low latency</li>
-                            <li><strong>Ownership:</strong> Single organization</li>
-                            <li><strong>Key Technology:</strong> Ethernet, Wi-Fi Routers</li>
+                            <li><strong>Range:</strong> Up to 1-2 km</li>
+                            <li><strong>Speed:</strong> 10 Mbps - 100 Gbps</li>
+                            <li><strong>Topology:</strong> Star, Bus, Ring, Mesh</li>
+                            <li><strong>Devices:</strong> Switches, Routers, Access Points</li>
                         </ul>
                     </div>
                     <div class="point">
-                        <h3>Examples:</h3>
+                        <h3><span class="icon">🛡️</span> Security Measures <span class="security-badge">HIGH CONTROL</span></h3>
                         <ul>
-                            <li>Home Wi-Fi network</li>
-                            <li>School computer lab</li>
-                            <li>Office network with shared resources</li>
-                            <li>Library network</li>
-                            <li>Coffee shop Wi-Fi</li>
+                            <li>MAC address filtering</li>
+                            <li>WPA3 encryption for Wi-Fi</li>
+                            <li>VLAN segmentation</li>
+                            <li>802.1X port authentication</li>
+                            <li>Firewalls at network edge</li>
+                            <li>Intrusion Detection Systems</li>
                         </ul>
                     </div>
                     <div class="point">
-                        <h3>Benefits:</h3>
-                        <ul>
-                            <li>Resource sharing (printers, files)</li>
-                            <li>Centralized security</li>
-                            <li>High-speed data transfer</li>
-                            <li>Cost-effective for small areas</li>
-                        </ul>
+                        <h3><span class="icon">⚡</span> Technology Stack</h3>
+                        <div class="tech-grid">
+                            <div class="tech-item">
+                                <strong>Ethernet</strong>
+                                10/100/1000/10000 Mbps
+                            </div>
+                            <div class="tech-item">
+                                <strong>Wi-Fi Standards</strong>
+                                802.11a/b/g/n/ac/ax
+                            </div>
+                            <div class="tech-item">
+                                <strong>Cable Types</strong>
+                                Cat5e/6/6a/7/8
+                            </div>
+                            <div class="tech-item">
+                                <strong>Protocols</strong>
+                                TCP/IP, ARP, DHCP, DNS
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="image-container">
@@ -501,44 +559,60 @@
                             <p>Router connecting multiple devices</p>
                             <div style="margin-top: 20px; font-size: 3rem;">🖥️📱🖨️💻</div>
                             <div style="font-size: 2rem;">📡</div>
+                            <div style="margin-top: 20px; font-size: 1rem; opacity: 0.8;">
+                                Security: Controllable | Speed: Very High | Range: Building
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 5: MAN -->
-        <div class="slide" id="slide5">
+        <!-- Slide 4: MAN Enhanced -->
+        <div class="slide" id="slide4">
             <h1 class="slide-title">MAN – Metropolitan Area Network</h1>
             <div class="slide-content">
                 <div class="points-container">
                     <div class="point">
-                        <h3>The City-Wide Web</h3>
+                        <h3><span class="icon">🏙️</span> City-Scale Connectivity</h3>
                         <ul>
-                            <li><strong>Range:</strong> Entire city or large campus (50-60 km)</li>
-                            <li><strong>Purpose:</strong> Connects multiple LANs together</li>
-                            <li><strong>Operation:</strong> ISPs or city authorities</li>
-                            <li><strong>Technology:</strong> Microwave, Fiber-Optic</li>
+                            <li><strong>Range:</strong> 5-50 km (City-wide)</li>
+                            <li><strong>Speed:</strong> 10 Mbps - 10 Gbps</li>
+                            <li><strong>Topology:</strong> Dual Ring, Mesh</li>
+                            <li><strong>Owners:</strong> ISPs, Municipalities, Corporations</li>
                         </ul>
                     </div>
                     <div class="point">
-                        <h3>Examples:</h3>
+                        <h3><span class="icon">🔐</span> Security Challenges <span class="security-badge">COMPLEX</span></h3>
                         <ul>
-                            <li>City-wide broadband networks</li>
-                            <li>Cable TV network infrastructure</li>
-                            <li>ISP connections across a city</li>
-                            <li>University with multiple campuses</li>
-                            <li>Smart city infrastructure</li>
+                            <li>Multi-organization access control</li>
+                            <li>MPLS VPN segmentation</li>
+                            <li>DDOS protection required</li>
+                            <li>Physical cable security crucial</li>
+                            <li>BGP security implementations</li>
+                            <li>Certificate-based authentication</li>
                         </ul>
                     </div>
                     <div class="point">
-                        <h3>Applications:</h3>
-                        <ul>
-                            <li>Government network systems</li>
-                            <li>Emergency services coordination</li>
-                            <li>Educational networks</li>
-                            <li>Business park connectivity</li>
-                        </ul>
+                        <h3><span class="icon">🌉</span> Core Technologies</h3>
+                        <div class="tech-grid">
+                            <div class="tech-item">
+                                <strong>Fiber Optics</strong>
+                                Single/Multi-mode, DWDM
+                            </div>
+                            <div class="tech-item">
+                                <strong>Wireless</strong>
+                                WiMAX, Microwave links
+                            </div>
+                            <div class="tech-item">
+                                <strong>Protocols</strong>
+                                MPLS, ATM, SONET/SDH
+                            </div>
+                            <div class="tech-item">
+                                <strong>Carrier Ethernet</strong>
+                                E-Line, E-LAN services
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="image-container">
@@ -548,44 +622,60 @@
                             <p>City with interconnected buildings</p>
                             <div style="margin-top: 20px; font-size: 4rem;">🏢🌉🏢</div>
                             <div style="font-size: 2rem;">⇄ ⇆ ⇄</div>
+                            <div style="margin-top: 20px; font-size: 1rem; opacity: 0.8;">
+                                Security: Complex | Speed: High | Range: City
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 6: WAN -->
-        <div class="slide" id="slide6">
+        <!-- Slide 5: WAN Enhanced -->
+        <div class="slide" id="slide5">
             <h1 class="slide-title">WAN – Wide Area Network</h1>
             <div class="slide-content">
                 <div class="points-container">
                     <div class="point">
-                        <h3>The Global Giant</h3>
+                        <h3><span class="icon">🌍</span> The Global Backbone</h3>
                         <ul>
-                            <li><strong>Range:</strong> Country, continent, or entire world</li>
-                            <li><strong>Purpose:</strong> Connects LANs and MANs globally</li>
-                            <li><strong>Infrastructure:</strong> Leased lines, satellites</li>
-                            <li><strong>Largest Example:</strong> The Internet</li>
+                            <li><strong>Range:</strong> Unlimited (Global)</li>
+                            <li><strong>Speed:</strong> 1.5 Mbps - 100+ Gbps</li>
+                            <li><strong>Latency:</strong> High (50-500ms)</li>
+                            <li><strong>Cost:</strong> Extremely High</li>
                         </ul>
                     </div>
                     <div class="point">
-                        <h3>Key Points:</h3>
+                        <h3><span class="icon">🚨</span> Security Critical <span class="security-badge">HIGHEST RISK</span></h3>
                         <ul>
-                            <li>Slower than LANs due to distances</li>
-                            <li>Most expensive to implement</li>
-                            <li>Uses routers and switches</li>
-                            <li>Can be public or private</li>
+                            <li>End-to-end encryption (IPsec, SSL/TLS)</li>
+                            <li>Distributed denial-of-service protection</li>
+                            <li>Border Gateway Protocol security</li>
+                            <li>Deep packet inspection</li>
+                            <li>Zero Trust Architecture</li>
+                            <li>Quantum encryption (emerging)</li>
                         </ul>
                     </div>
                     <div class="point">
-                        <h3>Examples:</h3>
-                        <ul>
-                            <li>The Internet (largest WAN)</li>
-                            <li>Banking networks</li>
-                            <li>Multinational corporation networks</li>
-                            <li>Research and education networks</li>
-                            <li>Military communications</li>
-                        </ul>
+                        <h3><span class="icon">🛰️</span> Global Infrastructure</h3>
+                        <div class="tech-grid">
+                            <div class="tech-item">
+                                <strong>Submarine Cables</strong>
+                                1.4+ million km worldwide
+                            </div>
+                            <div class="tech-item">
+                                <strong>Satellites</strong>
+                                LEO, MEO, GEO constellations
+                            </div>
+                            <div class="tech-item">
+                                <strong>Protocols</strong>
+                                BGP, OSPF, MPLS, SD-WAN
+                            </div>
+                            <div class="tech-item">
+                                <strong>5G/6G Backhaul</strong>
+                                Mobile network integration
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="image-container">
@@ -595,163 +685,302 @@
                             <p>World map with network connections</p>
                             <div style="margin-top: 20px; font-size: 6rem;">🌍</div>
                             <div style="font-size: 1.5rem; margin-top: 10px;">Connected by submarine cables & satellites</div>
+                            <div style="margin-top: 20px; font-size: 1rem; opacity: 0.8;">
+                                Security: Critical | Speed: Variable | Range: Global
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 7: Visual Comparison -->
-        <div class="slide" id="slide7">
-            <h1 class="slide-title">The Big Picture – Hierarchy</h1>
+        <!-- Slide 6: Technology Comparison -->
+        <div class="slide" id="slide6">
+            <h1 class="slide-title">Technology Comparison</h1>
             <div class="slide-content">
-                <div class="network-hierarchy">
-                    <div class="hierarchy-circle wan-circle">
-                        WAN<br>🌐
-                    </div>
-                    <div class="hierarchy-circle man-circle">
-                        MAN<br>🏙️
-                    </div>
-                    <div class="hierarchy-circle lan-circle">
-                        LAN<br>🏠
-                    </div>
-                    <div class="hierarchy-circle pan-circle">
-                        PAN<br>👤
-                    </div>
-                </div>
                 <div class="points-container">
                     <div class="point">
-                        <h3>Scale Progression:</h3>
+                        <h3><span class="icon">📊</span> Network Technology Matrix</h3>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Network Type</th>
+                                    <th>Key Tech</th>
+                                    <th>Max Speed</th>
+                                    <th>Security Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PAN</td>
+                                    <td>Bluetooth 5.3, NFC</td>
+                                    <td>3 Mbps</td>
+                                    <td>⭐⭐☆☆☆</td>
+                                </tr>
+                                <tr>
+                                    <td>LAN</td>
+                                    <td>Wi-Fi 6E, 10GbE</td>
+                                    <td>10 Gbps</td>
+                                    <td>⭐⭐⭐⭐☆</td>
+                                </tr>
+                                <tr>
+                                    <td>MAN</td>
+                                    <td>Fiber, WiMAX</td>
+                                    <td>10 Gbps</td>
+                                    <td>⭐⭐⭐☆☆</td>
+                                </tr>
+                                <tr>
+                                    <td>WAN</td>
+                                    <td>MPLS, Satellite</td>
+                                    <td>100 Gbps+</td>
+                                    <td>⭐⭐⭐⭐⭐</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="point">
+                        <h3><span class="icon">📈</span> Evolution Timeline</h3>
                         <ul>
-                            <li><strong>PAN:</strong> Personal devices (10m)</li>
-                            <li><strong>LAN:</strong> Building/Campus (1km)</li>
-                            <li><strong>MAN:</strong> City (50km)</li>
-                            <li><strong>WAN:</strong> Global (Worldwide)</li>
+                            <li><strong>1990s:</strong> Dial-up, Token Ring</li>
+                            <li><strong>2000s:</strong> Broadband, Wi-Fi</li>
+                            <li><strong>2010s:</strong> 4G, Fiber, Cloud</li>
+                            <li><strong>2020s:</strong> 5G, Wi-Fi 6, SD-WAN</li>
+                            <li><strong>Future:</strong> 6G, Quantum, Starlink</li>
                         </ul>
                     </div>
                     <div class="point">
-                        <h3>Working Together:</h3>
+                        <h3><span class="icon">⚖️</span> Trade-offs</h3>
                         <ul>
-                            <li>Each network type has specific uses</li>
-                            <li>They interconnect to form larger networks</li>
-                            <li>Internet = Global WAN connecting all types</li>
-                            <li>Seamless user experience across scales</li>
+                            <li>Speed vs. Distance</li>
+                            <li>Security vs. Convenience</li>
+                            <li>Cost vs. Performance</li>
+                            <li>Control vs. Scalability</li>
                         </ul>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <div class="image-placeholder">
+                        <div>
+                            <h3>📡 Technology Evolution</h3>
+                            <p>From dial-up to 5G</p>
+                            <div style="margin-top: 20px; font-size: 4rem;">⌛→⚡</div>
+                            <div style="margin-top: 20px; font-size: 2rem;">
+                                <span style="opacity: 0.5;">📞</span> →
+                                <span>📶</span> →
+                                <span style="color: #4fc3f7;">🚀</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 8: Quiz -->
-        <div class="slide" id="slide8">
-            <h1 class="slide-title">Quick Recap & Quiz!</h1>
+        <!-- Slide 7: Security Deep Dive -->
+        <div class="slide" id="slide7">
+            <h1 class="slide-title">Security Across Networks</h1>
             <div class="slide-content">
                 <div class="points-container">
                     <div class="point">
-                        <h3>Can You Match the Network Type?</h3>
-                        <p>Click on the correct answer for each scenario:</p>
+                        <h3><span class="icon">🛡️</span> Security Hierarchy</h3>
+                        <ul>
+                            <li><strong>PAN:</strong> Physical proximity, Pairing codes</li>
+                            <li><strong>LAN:</strong> MAC filtering, WPA3, VLANs</li>
+                            <li><strong>MAN:</strong> MPLS VPNs, BGP security</li>
+                            <li><strong>WAN:</strong> IPsec, DDoS protection, Zero Trust</li>
+                        </ul>
+                    </div>
+                    <div class="point">
+                        <h3><span class="icon">🎯</span> Common Threats</h3>
+                        <ul>
+                            <li>PAN: Bluejacking, Eavesdropping</li>
+                            <li>LAN: Rogue APs, ARP spoofing</li>
+                            <li>MAN: Fiber tapping, BGP hijacking</li>
+                            <li>WAN: DDoS, Nation-state attacks</li>
+                        </ul>
+                    </div>
+                    <div class="point">
+                        <h3><span class="icon">🔐</span> Best Practices</h3>
+                        <ul>
+                            <li>Always use strongest available encryption</li>
+                            <li>Regular firmware updates</li>
+                            <li>Network segmentation</li>
+                            <li>Multi-factor authentication</li>
+                            <li>Continuous monitoring</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <div class="image-placeholder">
+                        <div>
+                            <h3>🔒 Security Layers</h3>
+                            <p>Multiple layers of protection</p>
+                            <div style="margin-top: 20px; font-size: 4rem;">🛡️🛡️🛡️</div>
+                            <div style="margin-top: 20px; font-size: 1.5rem;">
+                                Encryption | Authentication | Monitoring
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Mega Quiz -->
+        <div class="slide" id="slide8">
+            <h1 class="slide-title">Network Knowledge Challenge!</h1>
+            <div class="slide-content">
+                <div class="points-container">
+                    <div class="point">
+                        <h3><span class="icon">🧠</span> Test Your Network IQ</h3>
+                        <p>Answer these questions to test your knowledge:</p>
                     </div>
                     
-                    <div id="quiz-container">
-                        <div class="point">
-                            <p><strong>1. Sending a document from your phone to a nearby printer?</strong></p>
-                            <div class="quiz-option" data-question="1" data-answer="PAN">PAN</div>
-                            <div class="quiz-option" data-question="1" data-answer="LAN">LAN</div>
-                            <div class="quiz-option" data-question="1" data-answer="WAN">WAN</div>
+                    <!-- Question 1 -->
+                    <div class="point">
+                        <p><strong>1. Which network uses "pairing codes" as primary security?</strong></p>
+                        <div class="quiz-option" data-question="1" data-answer="PAN">PAN</div>
+                        <div class="quiz-option" data-question="1" data-answer="LAN">LAN</div>
+                        <div class="quiz-option" data-question="1" data-answer="WAN">WAN</div>
+                    </div>
+                    
+                    <!-- Question 2 -->
+                    <div class="point">
+                        <p><strong>2. WiMAX technology is primarily used in which network?</strong></p>
+                        <div class="quiz-option" data-question="2" data-answer="MAN">MAN</div>
+                        <div class="quiz-option" data-question="2" data-answer="PAN">PAN</div>
+                        <div class="quiz-option" data-question="2" data-answer="LAN">LAN</div>
+                    </div>
+                    
+                    <!-- Question 3 -->
+                    <div class="point">
+                        <p><strong>3. Which network has the highest security requirement?</strong></p>
+                        <div class="quiz-option" data-question="3" data-answer="WAN">WAN</div>
+                        <div class="quiz-option" data-question="3" data-answer="PAN">PAN</div>
+                        <div class="quiz-option" data-question="3" data-answer="LAN">LAN</div>
+                    </div>
+                    
+                    <!-- Question 4 (Humor) -->
+                    <div class="point">
+                        <div class="quiz-humor">
+                            <p><strong>4. Your smartwatch won't connect to your phone. You start blaming:</strong></p>
+                            <div style="font-style: italic; color: #333; margin: 10px 0;">
+                                "The network gremlins are at it again! Or maybe it's PAN-demonium?"
+                            </div>
                         </div>
-                        
-                        <div class="point">
-                            <p><strong>2. Playing an online game with someone on another continent?</strong></p>
-                            <div class="quiz-option" data-question="2" data-answer="LAN">LAN</div>
-                            <div class="quiz-option" data-question="2" data-answer="MAN">MAN</div>
-                            <div class="quiz-option" data-question="2" data-answer="WAN">WAN</div>
-                        </div>
-                        
-                        <div class="point">
-                            <p><strong>3. Your entire university campus has the same login system?</strong></p>
-                            <div class="quiz-option" data-question="3" data-answer="LAN">LAN</div>
-                            <div class="quiz-option" data-question="3" data-answer="MAN">MAN</div>
-                            <div class="quiz-option" data-question="3" data-answer="PAN">PAN</div>
-                        </div>
-                        
-                        <div class="point">
-                            <p><strong>4. All computers in a library can access the same database?</strong></p>
-                            <div class="quiz-option" data-question="4" data-answer="PAN">PAN</div>
-                            <div class="quiz-option" data-question="4" data-answer="LAN">LAN</div>
-                            <div class="quiz-option" data-question="4" data-answer="WAN">WAN</div>
-                        </div>
+                        <div class="quiz-option" data-question="4" data-answer="PAN">PAN Issues</div>
+                        <div class="quiz-option" data-question="4" data-answer="LAN">LAN Gremlins</div>
+                        <div class="quiz-option" data-question="4" data-answer="MAN">MAN-agement Problem</div>
                     </div>
                 </div>
                 <div class="image-container">
                     <div class="image-placeholder">
                         <div>
-                            <h3>🎯 Test Your Knowledge!</h3>
-                            <p>Interactive Quiz</p>
-                            <div style="margin-top: 20px; font-size: 5rem;">❓</div>
+                            <h3>🎯 Quiz Time!</h3>
+                            <p>How well do you know networks?</p>
+                            <div style="margin-top: 20px; font-size: 5rem;">🧠</div>
                             <div id="quiz-result" style="margin-top: 20px; font-size: 1.2rem;"></div>
+                            <div id="score-display" style="margin-top: 20px; font-size: 1.5rem; font-weight: bold;"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 9: Conclusion -->
+        <!-- Slide 9: Advanced Quiz -->
         <div class="slide" id="slide9">
-            <h1 class="slide-title">Conclusion</h1>
+            <h1 class="slide-title">Advanced Technical Quiz</h1>
             <div class="slide-content">
                 <div class="points-container">
                     <div class="point">
-                        <h3>Key Takeaways:</h3>
-                        <ul>
-                            <li>Understanding scale helps design, troubleshoot, and secure networks</li>
-                            <li>Every level (PAN → WAN) is crucial in our connected world</li>
-                            <li>They work together seamlessly to bring information to you</li>
-                        </ul>
+                        <h3><span class="icon">⚡</span> Technical Deep Dive</h3>
+                        <p>Advanced questions for network enthusiasts:</p>
                     </div>
+                    
+                    <!-- Question 5 -->
                     <div class="point">
-                        <h3>Quote:</h3>
-                        <p style="font-style: italic; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
-                            "Networks are not just about computers; they are about connecting people."
-                        </p>
+                        <p><strong>5. Which technology uses DWDM for high capacity?</strong></p>
+                        <div class="quiz-option" data-question="5" data-answer="MAN">MAN/WAN Backbone</div>
+                        <div class="quiz-option" data-question="5" data-answer="PAN">PAN Bluetooth</div>
+                        <div class="quiz-option" data-question="5" data-answer="LAN">LAN Ethernet</div>
                     </div>
+                    
+                    <!-- Question 6 -->
                     <div class="point">
-                        <h3>The Future:</h3>
-                        <ul>
-                            <li>5G and beyond will blur network boundaries</li>
-                            <li>IoT will expand PAN concepts</li>
-                            <li>Global connectivity continues to evolve</li>
-                            <li>Security remains paramount at all levels</li>
-                        </ul>
+                        <p><strong>6. BGP security is crucial for which network?</strong></p>
+                        <div class="quiz-option" data-question="6" data-answer="WAN">WAN/Internet</div>
+                        <div class="quiz-option" data-question="6" data-answer="LAN">LAN Routing</div>
+                        <div class="quiz-option" data-question="6" data-answer="MAN">MAN Services</div>
+                    </div>
+                    
+                    <!-- Question 7 -->
+                    <div class="point">
+                        <p><strong>7. What's the maximum speed of Bluetooth 5.3?</strong></p>
+                        <div class="quiz-option" data-question="7" data-answer="3">3 Mbps</div>
+                        <div class="quiz-option" data-question="7" data-answer="24">24 Mbps</div>
+                        <div class="quiz-option" data-question="7" data-answer="100">100 Mbps</div>
+                    </div>
+                    
+                    <!-- Question 8 (Humor) -->
+                    <div class="point">
+                        <div class="quiz-humor">
+                            <p><strong>8. Your internet is down during a game. You complain:</strong></p>
+                            <div style="font-style: italic; color: #333; margin: 10px 0;">
+                                "This WAN-derful connection is letting me down! Is it a LAN-guage barrier?"
+                            </div>
+                        </div>
+                        <div class="quiz-option" data-question="8" data-answer="WAN">WAN Connectivity Issue</div>
+                        <div class="quiz-option" data-question="8" data-answer="LAN">LAN Router Problem</div>
+                        <div class="quiz-option" data-question="8" data-answer="PAN">PAN-cake Breakfast Interference</div>
                     </div>
                 </div>
                 <div class="image-container">
                     <div class="image-placeholder">
                         <div>
-                            <h3>🚀 Connected Future</h3>
-                            <p>The journey from personal to global connectivity</p>
-                            <div style="margin-top: 20px; font-size: 6rem;">🌐</div>
+                            <h3>🔧 Tech Quiz</h3>
+                            <p>Advanced network knowledge</p>
+                            <div style="margin-top: 20px; font-size: 5rem;">⚡</div>
+                            <div id="advanced-quiz-result" style="margin-top: 20px; font-size: 1.2rem;"></div>
+                            <div id="advanced-score" style="margin-top: 20px; font-size: 1.5rem; font-weight: bold;"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 10: Thank You -->
+        <!-- Slide 10: Conclusion -->
         <div class="slide" id="slide10">
             <div style="text-align: center; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                <h1 style="font-size: 4rem; color: #4fc3f7; margin-bottom: 30px; animation: pulse 2s infinite;">Thank You!</h1>
-                <div style="font-size: 2rem; margin-bottom: 40px;">❓ Questions? ❓</div>
-                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; max-width: 600px;">
-                    <h3 style="margin-bottom: 15px;">Network Types Summary:</h3>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
-                        <div style="background: rgba(255,107,107,0.2); padding: 10px; border-radius: 8px;">PAN: Personal</div>
-                        <div style="background: rgba(78,205,196,0.2); padding: 10px; border-radius: 8px;">LAN: Local</div>
-                        <div style="background: rgba(255,209,102,0.2); padding: 10px; border-radius: 8px;">MAN: Metropolitan</div>
-                        <div style="background: rgba(17,138,178,0.2); padding: 10px; border-radius: 8px;">WAN: Wide Area</div>
+                <h1 style="font-size: 4rem; color: #4fc3f7; margin-bottom: 30px; animation: pulse 2s infinite;">Mission Complete! 🚀</h1>
+                <div style="font-size: 1.5rem; margin-bottom: 20px; color: #a5d6a7;">You've navigated the network universe!</div>
+                
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; max-width: 800px; margin: 20px 0;">
+                    <h3 style="margin-bottom: 20px; color: #4fc3f7;">🎓 Key Takeaways:</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; text-align: left;">
+                        <div style="padding: 15px; background: rgba(255,107,107,0.1); border-radius: 10px;">
+                            <strong style="color: #ff8a80;">🔒 Security Matters</strong><br>
+                            Different networks need different protection
+                        </div>
+                        <div style="padding: 15px; background: rgba(78,205,196,0.1); border-radius: 10px;">
+                            <strong style="color: #a5d6a7;">⚡ Technology Evolves</strong><br>
+                            From Bluetooth to quantum networks
+                        </div>
+                        <div style="padding: 15px; background: rgba(255,209,102,0.1); border-radius: 10px;">
+                            <strong style="color: #ffd166;">📈 Scale Impacts Design</strong><br>
+                            Size determines technology choices
+                        </div>
+                        <div style="padding: 15px; background: rgba(17,138,178,0.1); border-radius: 10px;">
+                            <strong style="color: #80deea;">🌐 Everything Connects</strong><br>
+                            PAN → LAN → MAN → WAN = The Internet
+                        </div>
                     </div>
                 </div>
+                
                 <div style="margin-top: 40px; font-size: 1.2rem; opacity: 0.8;">
-                    Presentation on Network Types by Geographical Area
+                    <div style="margin-bottom: 10px;">Final Score: <span id="final-score" style="font-weight: bold; color: #4fc3f7;">0/8</span></div>
+                    <div>Network Types Mastery: <span id="mastery-level" style="font-weight: bold; color: #ffd166;">Beginner</span></div>
+                </div>
+                
+                <div style="margin-top: 30px; font-size: 1rem; opacity: 0.7;">
+                    Presentation Complete | Reload page to restart
                 </div>
             </div>
         </div>
@@ -769,17 +998,23 @@
     </div>
 
     <script>
-        class Presentation {
+        class EnhancedPresentation {
             constructor() {
                 this.currentSlide = 1;
                 this.totalSlides = 10;
                 this.isAnimating = false;
                 this.quizAnswers = {
                     1: "PAN",
-                    2: "WAN",
-                    3: "MAN",
-                    4: "LAN"
+                    2: "MAN",
+                    3: "WAN",
+                    4: "PAN",
+                    5: "MAN",
+                    6: "WAN",
+                    7: "3",
+                    8: "WAN"
                 };
+                this.userScore = 0;
+                this.maxScore = 8;
                 
                 this.init();
             }
@@ -837,6 +1072,9 @@
                         allOptions.forEach(opt => {
                             if (opt.dataset.answer === correctAnswer) {
                                 opt.classList.add('correct');
+                                if (opt === e.target) {
+                                    this.userScore++;
+                                }
                             } else if (opt === e.target) {
                                 opt.classList.add('wrong');
                             }
@@ -849,21 +1087,63 @@
             }
             
             updateQuizResult() {
-                const quizOptions = document.querySelectorAll('.quiz-option');
-                const correctCount = Array.from(quizOptions).filter(opt => 
-                    opt.classList.contains('correct') && 
-                    opt.dataset.answer === this.quizAnswers[opt.dataset.question]
-                ).length / 3; // Divide by 3 because each question has 1 correct and 2 wrong options
+                const resultElement = document.getElementById('quiz-result') || document.getElementById('advanced-quiz-result');
+                const scoreElement = document.getElementById('score-display') || document.getElementById('advanced-score');
                 
-                const resultElement = document.getElementById('quiz-result');
-                resultElement.innerHTML = `
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
-                        <strong>Score: ${correctCount}/4</strong><br>
-                        ${correctCount === 4 ? '🎉 Perfect! You know your networks!' : 
-                          correctCount >= 2 ? '👍 Good job! Keep learning!' : 
-                          '💡 Review the slides and try again!'}
-                    </div>
-                `;
+                if (resultElement) {
+                    const scoreText = `Score: ${this.userScore}/${this.maxScore}`;
+                    let feedback = '';
+                    
+                    if (this.userScore === this.maxScore) {
+                        feedback = '🎉 Perfect! You are a Network Guru!';
+                    } else if (this.userScore >= this.maxScore * 0.75) {
+                        feedback = '👍 Excellent! You know your networks well!';
+                    } else if (this.userScore >= this.maxScore * 0.5) {
+                        feedback = '👌 Good job! Solid understanding!';
+                    } else {
+                        feedback = '💡 Keep learning! Review the slides!';
+                    }
+                    
+                    resultElement.innerHTML = `
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                            <strong>${scoreText}</strong><br>
+                            ${feedback}
+                        </div>
+                    `;
+                    
+                    if (scoreElement) {
+                        scoreElement.textContent = scoreText;
+                    }
+                }
+                
+                // Update final score on conclusion slide
+                if (this.currentSlide === 10) {
+                    this.updateFinalScore();
+                }
+            }
+            
+            updateFinalScore() {
+                const finalScoreElement = document.getElementById('final-score');
+                const masteryElement = document.getElementById('mastery-level');
+                
+                if (finalScoreElement) {
+                    finalScoreElement.textContent = `${this.userScore}/${this.maxScore}`;
+                    
+                    let mastery = '';
+                    if (this.userScore === this.maxScore) {
+                        mastery = 'Network Ninja 🥷';
+                    } else if (this.userScore >= 6) {
+                        mastery = 'Network Pro 🎓';
+                    } else if (this.userScore >= 4) {
+                        mastery = 'Network Explorer 🧭';
+                    } else {
+                        mastery = 'Network Novice 👶';
+                    }
+                    
+                    if (masteryElement) {
+                        masteryElement.textContent = mastery;
+                    }
+                }
             }
             
             showSlide(slideNumber) {
@@ -900,9 +1180,9 @@
                     // Animate points in the new slide
                     this.animatePoints(nextSlideElement);
                     
-                    // Special animations for hierarchy slide
-                    if (slideNumber === 7) {
-                        this.animateHierarchy();
+                    // Update final score if on conclusion slide
+                    if (slideNumber === 10) {
+                        this.updateFinalScore();
                     }
                     
                     this.isAnimating = false;
@@ -932,15 +1212,6 @@
                 }, 500);
             }
             
-            animateHierarchy() {
-                const circles = document.querySelectorAll('.hierarchy-circle');
-                circles.forEach((circle, index) => {
-                    setTimeout(() => {
-                        circle.classList.add('animate');
-                    }, index * 500);
-                });
-            }
-            
             nextSlide() {
                 if (this.currentSlide < this.totalSlides) {
                     this.showSlide(this.currentSlide + 1);
@@ -954,7 +1225,19 @@
             }
             
             restartPresentation() {
+                this.userScore = 0;
                 this.showSlide(1);
+                
+                // Reset quiz options
+                document.querySelectorAll('.quiz-option').forEach(option => {
+                    option.classList.remove('correct', 'wrong');
+                });
+                
+                // Clear results
+                const resultElements = document.querySelectorAll('[id*="quiz-result"], [id*="score"]');
+                resultElements.forEach(el => el.innerHTML = '');
+                
+                this.updateQuizResult();
             }
             
             updateSlideIndicator() {
@@ -965,7 +1248,7 @@
         
         // Initialize presentation when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            const presentation = new Presentation();
+            const presentation = new EnhancedPresentation();
             
             // Add CSS animation for pulsing effect
             const style = document.createElement('style');
@@ -980,4 +1263,4 @@
         });
     </script>
 </body>
-</html>
+                                </html>
