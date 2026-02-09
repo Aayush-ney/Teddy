@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Types by Geographical Area</title>
+    <title>Network Classification by Geographical Scope</title>
     <style>
         * {
             margin: 0;
@@ -12,1255 +12,655 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        :root {
+            --pan-color: #4361ee;
+            --lan-color: #2a9d8f;
+            --man-color: #e9c46a;
+            --wan-color: #e76f51;
+            --dark-bg: #0a0a1a;
+            --card-bg: #1a1a2e;
+            --text-light: #f8f9fa;
+            --text-muted: #adb5bd;
+        }
+
         body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: white;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(67, 97, 238, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(42, 157, 143, 0.15) 0%, transparent 20%);
             min-height: 100vh;
-            overflow: hidden;
+            padding: 20px;
         }
 
-        .slides-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        .slide {
-            position: absolute;
-            width: 90%;
+        .container {
             max-width: 1200px;
-            height: 80%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(10, 10, 26, 0.7) 100%);
             border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            overflow: hidden;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
-        .slide.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, -50%) scale(1);
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #00e5ff, #4cc9f0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 229, 255, 0.3);
         }
 
-        .slide.exit-left {
-            transform: translate(-150%, -50%) scale(0.5);
-            opacity: 0;
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
         }
 
-        .slide.exit-right {
-            transform: translate(50%, -50%) scale(0.5);
-            opacity: 0;
-        }
-
-        .slide-title {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #4fc3f7;
-            text-shadow: 0 0 20px rgba(79, 195, 247, 0.5);
-            transform: translateY(-30px);
-            opacity: 0;
-        }
-
-        .slide-title.animate {
-            animation: titleSlideIn 0.8s forwards 0.3s;
-        }
-
-        @keyframes titleSlideIn {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .slide-content {
+        .network-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            height: calc(100% - 100px);
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
         }
 
-        .points-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding-right: 20px;
-            overflow-y: auto;
-        }
-
-        .point {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 4px solid #4fc3f7;
-            transform: translateX(-50px);
-            opacity: 0;
-            transition: all 0.5s ease;
-        }
-
-        .point.visible {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        .point h3 {
-            color: #4fc3f7;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .point h3 .icon {
-            font-size: 1.5rem;
-        }
-
-        .point ul {
-            list-style: none;
-            padding-left: 10px;
-        }
-
-        .point li {
-            margin: 8px 0;
-            padding-left: 20px;
-            position: relative;
-        }
-
-        .point li:before {
-            content: "▸";
-            color: #4fc3f7;
-            position: absolute;
-            left: 0;
-        }
-
-        .security-badge {
-            display: inline-block;
-            background: rgba(244, 67, 54, 0.2);
-            color: #ff8a80;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            margin-left: 10px;
-            border: 1px solid rgba(244, 67, 54, 0.3);
-        }
-
-        .tech-badge {
-            display: inline-block;
-            background: rgba(76, 175, 80, 0.2);
-            color: #a5d6a7;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            margin-left: 10px;
-            border: 1px solid rgba(76, 175, 80, 0.3);
-        }
-
-        .image-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .image-placeholder {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #1a2980, #26d0ce);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            text-align: center;
-            padding: 20px;
-        }
-
-        /* Navigation Controls */
-        .nav-controls {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-            z-index: 1000;
-        }
-
-        .nav-btn {
-            background: rgba(79, 195, 247, 0.2);
-            color: white;
-            border: 2px solid #4fc3f7;
-            padding: 12px 25px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
+        .network-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
         }
 
-        .nav-btn:hover {
-            background: rgba(79, 195, 247, 0.4);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(79, 195, 247, 0.3);
+        .network-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
         }
 
-        .nav-btn:active {
-            transform: translateY(0);
+        .network-card.pan { border-color: var(--pan-color); }
+        .network-card.lan { border-color: var(--lan-color); }
+        .network-card.man { border-color: var(--man-color); }
+        .network-card.wan { border-color: var(--wan-color); }
+
+        .network-card.pan:hover { box-shadow: 0 15px 35px rgba(67, 97, 238, 0.2); }
+        .network-card.lan:hover { box-shadow: 0 15px 35px rgba(42, 157, 143, 0.2); }
+        .network-card.man:hover { box-shadow: 0 15px 35px rgba(233, 196, 106, 0.2); }
+        .network-card.wan:hover { box-shadow: 0 15px 35px rgba(231, 111, 81, 0.2); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        .slide-indicator {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px 20px;
-            border-radius: 20px;
+        .network-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .pan .network-icon { background: rgba(67, 97, 238, 0.2); }
+        .lan .network-icon { background: rgba(42, 157, 143, 0.2); }
+        .man .network-icon { background: rgba(233, 196, 106, 0.2); }
+        .wan .network-icon { background: rgba(231, 111, 81, 0.2); }
+
+        .network-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .pan .network-title { color: var(--pan-color); }
+        .lan .network-title { color: var(--lan-color); }
+        .man .network-title { color: var(--man-color); }
+        .wan .network-title { color: var(--wan-color); }
+
+        .network-fullname {
+            color: var(--text-muted);
             font-size: 0.9rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 5px;
         }
 
-        /* Tech Specifications Grid */
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .tech-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .tech-item strong {
-            color: #4fc3f7;
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-        }
-
-        /* Network Comparison Table */
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
+        .network-details {
             margin-top: 20px;
         }
 
+        .detail-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+
+        .detail-label i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .detail-value {
+            color: var(--text-muted);
+            line-height: 1.5;
+            padding-left: 28px;
+        }
+
+        .comparison-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #00e5ff;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
         .comparison-table th {
-            background: rgba(79, 195, 247, 0.3);
-            padding: 15px;
-            text-align: left;
-            border-bottom: 2px solid #4fc3f7;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 18px 15px;
+            text-align: center;
+            font-weight: 600;
         }
 
         .comparison-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
         }
 
         .comparison-table tr:hover {
             background: rgba(255, 255, 255, 0.05);
         }
 
-        /* Quiz Styles */
-        .quiz-option {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            margin: 15px 0;
+        .scale-visualization {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .scale-bar {
+            height: 20px;
+            background: linear-gradient(90deg, 
+                var(--pan-color) 0%, 
+                var(--lan-color) 25%, 
+                var(--man-color) 60%, 
+                var(--wan-color) 100%);
             border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
+            margin: 30px 0;
             position: relative;
-            overflow: hidden;
         }
 
-        .quiz-option:before {
-            content: "";
+        .scale-marker {
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: 0.5s;
+            top: -40px;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 100px;
         }
 
-        .quiz-option:hover:before {
-            left: 100%;
+        .scale-label {
+            font-weight: 600;
+            margin-bottom: 5px;
         }
 
-        .quiz-option:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: #4fc3f7;
+        .scale-distance {
+            font-size: 0.9rem;
+            color: var(--text-muted);
         }
 
-        .quiz-option.correct {
-            background: rgba(76, 175, 80, 0.3);
-            border-color: #4caf50;
-            animation: pulseCorrect 0.5s ease;
+        .scale-marker.pan { left: 0%; }
+        .scale-marker.lan { left: 25%; }
+        .scale-marker.man { left: 60%; }
+        .scale-marker.wan { left: 100%; }
+
+        .insights-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-left: 5px solid #9d4edd;
         }
 
-        .quiz-option.wrong {
-            background: rgba(244, 67, 54, 0.3);
-            border-color: #f44336;
-            animation: shake 0.5s ease;
+        .insights-list {
+            list-style: none;
+            padding-left: 20px;
         }
 
-        .quiz-humor {
-            background: linear-gradient(45deg, #ff6b6b, #ffd166);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border: 2px dashed #ffd166;
-            animation: glow 2s infinite alternate;
+        .insights-list li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+            line-height: 1.6;
         }
 
-        @keyframes glow {
-            from { box-shadow: 0 0 10px #ffd166; }
-            to { box-shadow: 0 0 20px #ff6b6b; }
+        .insights-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #9d4edd;
+            font-weight: bold;
         }
 
-        @keyframes pulseCorrect {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        /* Scrollbar Styling */
-        .points-container::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .points-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-
-        .points-container::-webkit-scrollbar-thumb {
-            background: #4fc3f7;
-            border-radius: 4px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .slide-content {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            
-            .image-container {
-                height: 300px;
-            }
-            
-            .slide-title {
-                font-size: 2.5rem;
-            }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
         }
 
         @media (max-width: 768px) {
-            .slide {
-                padding: 20px;
-                width: 95%;
-                height: 85%;
-            }
-            
-            .slide-title {
+            h1 {
                 font-size: 2rem;
             }
             
-            .nav-btn {
-                padding: 10px 20px;
-                font-size: 0.9rem;
+            .network-grid {
+                grid-template-columns: 1fr;
             }
             
-            .tech-grid {
-                grid-template-columns: 1fr;
+            .comparison-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .scale-marker {
+                width: 80px;
+                font-size: 0.9rem;
             }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="slides-container">
-        <!-- Slide 1: Title -->
-        <div class="slide active" id="slide1">
-            <h1 class="slide-title animate">The Digital World: Connected by Scale</h1>
-            <div class="slide-content">
-                <div class="points-container">
-                    <div class="point visible" style="transition-delay: 0.1s">
-                        <h3><span class="icon">🌐</span> Types of Computer Networks</h3>
-                        <p>Based on Geographical Area with Security & Tech Deep Dive</p>
+    <div class="container">
+        <header class="header">
+            <h1>Network Classification by Geographical Scope</h1>
+            <p class="subtitle">A comprehensive overview of computer network types based on their coverage area, from personal devices to global infrastructure</p>
+        </header>
+
+        <div class="network-grid">
+            <!-- PAN Card -->
+            <div class="network-card pan">
+                <div class="card-header">
+                    <div>
+                        <h2 class="network-title">PAN</h2>
+                        <p class="network-fullname">Personal Area Network</p>
                     </div>
-                    <div class="point visible" style="transition-delay: 0.3s">
-                        <h3><span class="icon">🎯</span> Presentation Overview</h3>
-                        <ul>
-                            <li>From Personal to Global Networks</li>
-                            <li>Technology & Security Analysis</li>
-                            <li>Interactive Quiz with Humor</li>
-                            <li>Real-world Applications</li>
-                        </ul>
-                    </div>
-                    <div class="point visible" style="transition-delay: 0.5s">
-                        <h3><span class="icon">⚡</span> Key Learning Points</h3>
-                        <ul>
-                            <li>Network Security at Each Level</li>
-                            <li>Technology Evolution</li>
-                            <li>Performance vs. Security Trade-offs</li>
-                            <li>Future Trends</li>
-                        </ul>
+                    <div class="network-icon">
+                        <i class="fas fa-mobile-alt"></i>
                     </div>
                 </div>
-                <div class="image-container">
-                    <div class="image-placeholder">
-                        <div>
-                            <h3>🌐 Global Connectivity</h3>
-                            <p>Understanding how networks scale from personal devices to worldwide systems</p>
-                            <div style="margin-top: 20px; font-size: 4rem;">🚀</div>
+                <div class="network-details">
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-ruler"></i> Range
                         </div>
+                        <div class="detail-value">1-10 meters</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-tachometer-alt"></i> Speed
+                        </div>
+                        <div class="detail-value">Up to 2 Mbps</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-microchip"></i> Technology
+                        </div>
+                        <div class="detail-value">Bluetooth, Infrared, USB, Zigbee</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-lightbulb"></i> Use Cases
+                        </div>
+                        <div class="detail-value">Wireless headphones, smart watches, file transfer between personal devices</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-star"></i> Characteristics
+                        </div>
+                        <div class="detail-value">Low power consumption, simple setup, device-to-device communication, temporary connections</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LAN Card -->
+            <div class="network-card lan">
+                <div class="card-header">
+                    <div>
+                        <h2 class="network-title">LAN</h2>
+                        <p class="network-fullname">Local Area Network</p>
+                    </div>
+                    <div class="network-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                </div>
+                <div class="network-details">
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-ruler"></i> Range
+                        </div>
+                        <div class="detail-value">Up to 1-2 kilometers</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-tachometer-alt"></i> Speed
+                        </div>
+                        <div class="detail-value">10 Mbps - 100 Gbps</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-microchip"></i> Technology
+                        </div>
+                        <div class="detail-value">Ethernet, Wi-Fi, Token Ring, FDDI</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-lightbulb"></i> Use Cases
+                        </div>
+                        <div class="detail-value">Office networks, school campuses, smart homes, library networks</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-star"></i> Characteristics
+                        </div>
+                        <div class="detail-value">High data transfer rates, low latency, private ownership, wired/wireless options</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAN Card -->
+            <div class="network-card man">
+                <div class="card-header">
+                    <div>
+                        <h2 class="network-title">MAN</h2>
+                        <p class="network-fullname">Metropolitan Area Network</p>
+                    </div>
+                    <div class="network-icon">
+                        <i class="fas fa-city"></i>
+                    </div>
+                </div>
+                <div class="network-details">
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-ruler"></i> Range
+                        </div>
+                        <div class="detail-value">5-50 kilometers</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-tachometer-alt"></i> Speed
+                        </div>
+                        <div class="detail-value">10 Mbps - 10 Gbps</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-microchip"></i> Technology
+                        </div>
+                        <div class="detail-value">Fiber optics, Microwave, DSL, ATM</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-lightbulb"></i> Use Cases
+                        </div>
+                        <div class="detail-value">City-wide WiFi, cable TV networks, university campuses, government networks</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-star"></i> Characteristics
+                        </div>
+                        <div class="detail-value">Connects multiple LANs, public/private ownership, moderate cost, ISP managed</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WAN Card -->
+            <div class="network-card wan">
+                <div class="card-header">
+                    <div>
+                        <h2 class="network-title">WAN</h2>
+                        <p class="network-fullname">Wide Area Network</p>
+                    </div>
+                    <div class="network-icon">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                </div>
+                <div class="network-details">
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-ruler"></i> Range
+                        </div>
+                        <div class="detail-value">Global (unlimited)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-tachometer-alt"></i> Speed
+                        </div>
+                        <div class="detail-value">1 Mbps - 100 Gbps</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-microchip"></i> Technology
+                        </div>
+                        <div class="detail-value">Satellites, Fiber optics, Leased lines, MPLS</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-lightbulb"></i> Use Cases
+                        </div>
+                        <div class="detail-value">The Internet, multinational corporations, global banking, cloud services</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="fas fa-star"></i> Characteristics
+                        </div>
+                        <div class="detail-value">Largest geographical area, highest infrastructure cost, multiple admin control, uses routers & switches</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 2: PAN Enhanced -->
-        <div class="slide" id="slide2">
-            <h1 class="slide-title">PAN – Personal Area Network</h1>
-            <div class="slide-content">
-                <div class="points-container">
-                    <div class="point">
-                        <h3><span class="icon">👤</span> Your Digital Bubble</h3>
-                        <ul>
-                            <li><strong>Range:</strong> 1-10 meters (Within arm's reach)</li>
-                            <li><strong>Speed:</strong> 1-24 Mbps (Bluetooth 5.3: 3 Mbps)</li>
-                            <li><strong>Topology:</strong> Point-to-point, Star</li>
-                            <li><strong>Cost:</strong> Low to negligible</li>
-                        </ul>
-                    </div>
-                    <div class="point">
-                        <h3><span class="icon">🔒</span> Security Features <span class="security-badge">MEDIUM RISK</span></h3>
-                        <ul>
-                            <li>Pairing codes & device authentication</li>
-                            <li>Frequency hopping (Bluetooth)</li>
-                            <li>Limited range provides physical security</li>
-                            <li><strong>Vulnerabilities:</strong> Bluejacking, Bluesnarfing</li>
-                            <li><strong>Protection:</strong> Disable discoverability</li>
-                        </ul>
-                    </div>
-                    <div class="point">
-                        <h3><span class="icon">💻</span> Technology Deep Dive</h3>
-                        <div class="tech-grid">
-                            <div class="tech-item">
-                                <strong>Bluetooth</strong>
-                                Versions: 1.0 to 5.3
-                            </div>
-                            <div class="tech-item">
-                                <strong>NFC</strong>
-                                13.56 MHz, 424 kbps
-                            </div>
-                            <div class="tech-item">
-                                <strong>Zigbee</strong>
-                                250 kbps, Mesh networking
-                            </div>
-                            <div class="tech-item">
-                                <strong>Infrared</strong>
-                                Line-of-sight, 4 Mbps
-                            </div>
-                        </div>
-                    </div>
+        <div class="comparison-section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-bar"></i> Network Comparison Matrix
+            </h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th style="color: var(--pan-color)">PAN</th>
+                        <th style="color: var(--lan-color)">LAN</th>
+                        <th style="color: var(--man-color)">MAN</th>
+                        <th style="color: var(--wan-color)">WAN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Coverage Radius</td>
+                        <td>1-10 m</td>
+                        <td>1-2 km</td>
+                        <td>5-50 km</td>
+                        <td>Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td>Data Rate</td>
+                        <td>Low (≤2 Mbps)</td>
+                        <td>High (10M-100Gbps)</td>
+                        <td>Medium-High</td>
+                        <td>Variable</td>
+                    </tr>
+                    <tr>
+                        <td>Ownership</td>
+                        <td>Personal</td>
+                        <td>Private</td>
+                        <td>Public/Private</td>
+                        <td>Multiple</td>
+                    </tr>
+                    <tr>
+                        <td>Setup Cost</td>
+                        <td>Very Low</td>
+                        <td>Low-Medium</td>
+                        <td>Medium-High</td>
+                        <td>Very High</td>
+                    </tr>
+                    <tr>
+                        <td>Example</td>
+                        <td>Bluetooth</td>
+                        <td>Office Network</td>
+                        <td>City WiFi</td>
+                        <td>The Internet</td>
+                    </tr>
+                    <tr>
+                        <td>Latency</td>
+                        <td>Very Low</td>
+                        <td>Low</td>
+                        <td>Medium</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td>Security</td>
+                        <td>Medium</td>
+                        <td>High</td>
+                        <td>Medium</td>
+                        <td>Varies</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="scale-visualization">
+            <h2 class="section-title">
+                <i class="fas fa-expand-alt"></i> Geographical Coverage Scale
+            </h2>
+            <div class="scale-bar">
+                <div class="scale-marker pan">
+                    <div class="scale-label">PAN</div>
+                    <div class="scale-distance">1-10m</div>
                 </div>
-                <div class="image-container">
-                    <div class="image-placeholder">
-                        <div>
-                            <h3>👤 Personal Area Network</h3>
-                            <p>Person surrounded by connected devices</p>
-                            <div style="margin-top: 20px; font-size: 4rem;">🎧📱⌚💻</div>
-                            <div style="margin-top: 20px; font-size: 1rem; opacity: 0.8;">
-                                Security: Medium | Speed: Low | Range: Personal
-                            </div>
-                        </div>
-                    </div>
+                <div class="scale-marker lan">
+                    <div class="scale-label">LAN</div>
+                    <div class="scale-distance">Up to 2km</div>
+                </div>
+                <div class="scale-marker man">
+                    <div class="scale-label">MAN</div>
+                    <div class="scale-distance">5-50km</div>
+                </div>
+                <div class="scale-marker wan">
+                    <div class="scale-label">WAN</div>
+                    <div class="scale-distance">Global</div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 3: LAN Enhanced -->
-        <div class="slide" id="slide3">
-            <h1 class="slide-title">LAN – Local Area Network</h1>
-            <div class="slide-content">
-                <div class="points-container">
-                    <div class="point">
-                        <h3><span class="icon">🏠</span> The Local Workhorse</h3>
-                        <ul>
-                            <li><strong>Range:</strong> Up to 1-2 km</li>
-                            <li><strong>Speed:</strong> 10 Mbps - 100 Gbps</li>
-                            <li><strong>Topology:</strong> Star, Bus, Ring, Mesh</li>
-                            <li><strong>Devices:</strong> Switches, Routers, Access Points</li>
-                        </ul>
-                    </div>
-                    <div class="point">
-                        <h3><span class="icon">🛡️</span> Security Measures <span class="security-badge">HIGH CONTROL</span></h3>
-                        <ul>
-                            <li>MAC address filtering</li>
-                            <li>WPA3 encryption for Wi-Fi</li>
-                            <li>VLAN segmentation</li>
-                            <li>802.1X port authentication</li>
-                            <li>Firewalls at network edge</li>
-                            <li>Intrusion Detection Systems</li>
-                        </ul>
-                    </div>
-                    <div class="point">
-                        <h3><span class="icon">⚡</span> Technology Stack</h3>
-                        <div class="tech-grid">
-                            <div class="tech-item">
-                                <strong>Ethernet</strong>
-                                10/100/1000/10000 Mbps
-                            </div>
-                            <div class="tech-item">
-                                <strong>Wi-Fi Standards</strong>
-                                802.11a/b/g/n/ac/ax
-                            </div>
-                            <div class="tech-item">
-                                <strong>Cable Types</strong>
-                                Cat5e/6/6a/7/8
-                            </div>
-                            <div class="tech-item">
-                                <strong>Protocols</strong>
-                                TCP/IP, ARP, DHCP, DNS
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="image-container">
-                    <div class="image-placeholder">
-                        <div>
-                            <h3>🏠 Home/Office LAN</h3>
-                            <p>Router connecting multiple devices</p>
-                            <div style="margin-top: 20px; font-size: 3rem;">🖥️📱🖨️💻</div>
-                            <div style="font-size: 2rem;">📡</div>
-                            <div style="margin-top: 20px; font-size: 1rem; opacity: 0.8;">
-                                Security: Controllable | Speed: Very High | Range: Building
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="insights-section">
+            <h2 class="section-title">
+                <i class="fas fa-key"></i> Key Insights & Trends
+            </h2>
+            <ul class="insights-list">
+                <li>Network boundaries are blurring with technologies like 5G and IoT creating hybrid network architectures</li>
+                <li>Software-Defined WAN (SD-WAN) is revolutionizing enterprise network management and cost efficiency</li>
+                <li>Mesh network technology is extending traditional network topologies for better coverage and reliability</li>
+                <li>Edge computing is creating new network architecture paradigms by processing data closer to the source</li>
+                <li>Network virtualization allows multiple virtual networks to operate over shared physical infrastructure</li>
+            </ul>
         </div>
 
-        <!-- Slide 4: MAN Enhanced -->
-        <div class="slide" id="slide4">
-            <h1 class="slide-title">MAN – Metropolitan Area Network</h1>
-            <div class="slide-content">
-                <div class="points-container">
-                    <div class="point">
-                        <h3><span class="icon">🏙️</span> City-Scale Connectivity</h3>
-                        <ul>
-                            <li><strong>Range:</strong> 5-50 km (City-wide)</li>
-                            <li><strong>Speed:</strong> 10 Mbps - 10 Gbps</li>
-                            <li><strong>Topology:</strong> Dual Ring, Mesh</li>
-                            <li><strong>Owners:</strong> ISPs, Municipalities, Corporations</li>
-                        </ul>
-                    </div>
-                    <div class="point">
-                        <h3><span class="icon">🔐</span> Security Challenges <span class="security-badge">COMPLEX</span></h3>
-                        <ul>
-                            <li>Multi-organization access control</li>
-                            <li>MPLS VPN segmentation</li>
-                            <li>DDOS protection required</li>
-                            <li>Physical cable security crucial</li>
-                            <li>BGP security implementations</li>
-                            <li>Certificate-based authentication</li>
-                        </ul>
-                    </div>
-                    <div class="point">
-                        <h3><span class="icon">🌉</span> Core Technologies</h3>
-                        <div class="tech-grid">
-                            <div class="tech-item">
-                                <strong>Fiber Optics</strong>
-                                Single/Multi-mode, DWDM
-                            </div>
-                            <div class="tech-item">
-                                <strong>Wireless</strong>
-                                WiMAX, Microwave links
-                            </div>
-                            <div class="tech-item">
-                                <strong>Protocols</strong>
-                                MPLS, ATM, SONET/SDH
-                            </div>
-                            <div class="tech-item">
-                                <strong>Carrier Ethernet</strong>
-                                E-Line, E-LAN services
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="image-container">
-                    <div class="image-placeholder">
-                        <div>
-                            <h3>🏙️ Metropolitan Network</h3>
-                            <p>City with interconnected buildings</p>
-                            <div style="margin-top: 20px; font-size: 4rem;">🏢🌉🏢</div>
-                            <div style="font-size: 2rem;">⇄ ⇆ ⇄</div>
-                            <div style="margin-top: 20px; font-size: 1rem; opacity: 0.8;">
-                                Security: Complex | Speed: High | Range: City
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 5: WAN Enhanced -->
-        <div class="slide" id="slide5">
-            <h1 class="slide-title">WAN – Wide Area Network</h1>
-            <div class="slide-content">
-                <div class="points-container">
-                    <div class="point">
-                        <h3><span class="icon">🌍</span> The Global Backbone</h3>
-                        <ul>
-                            <li><strong>Range:</strong> Unlimited (Global)</li>
-                            <li><strong>Speed:</strong> 1.5 Mbps - 100+ Gbps</li>
-                            <li><strong>Latency:</strong> High (50-500ms)</li>
-                            <li><strong>Cost:</strong> Extremely High</li>
-                        </ul>
-                    </div>
-                    <div class="point">
-                        <h3><span class="icon">🚨</span> Security Critical <span class="security-badge">HIGHEST RISK</span></h3>
-                        <ul>
-                            <li>End-to-end encryption (IPsec, SSL/TLS)</li>
-                            <li>Distributed denial-of-service protection</li>
-                            <li>Border Gateway Protocol security</li>
-                            <li>Deep packet inspection</li>
-                            <li>Zero Trust Architecture</li>
-                            <li>Quantum encryption (emerging)</li>
-                        </ul>
-                    </div>
-                    <div class="point">
-                        <h3><span class="icon">🛰️</span> Global Infrastructure</h3>
-                        <div class="tech-grid">
-                            <div class="tech-item">
-                                <strong>Submarine Cables</strong>
-                                1.4+ million km worldwide
-                            </div>
-                            <div class="tech-item">
-                                <strong>Satellites</strong>
-                                LEO, MEO, GEO constellations
-                            </div>
-                            <div class="tech-item">
-                                <strong>Protocols</strong>
-                                BGP, OSPF, MPLS, SD-WAN
-                            </div>
-                            <div class="tech-item">
-                                <strong>5G/6G Backhaul</strong>
-                                Mobile network integration
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="image-container">
-                    <div class="image-placeholder">
-                        <div>
-                            <h3>🌐 Global WAN</h3>
-                            <p>World map with network connections</p>
-                            <div style="margin-top: 20px; font-size: 6rem;">🌍</div>
-                            <div style="font-size: 1.5rem; margin-top: 10px;">Connected by submarine cables & satellites</div>
-                            <div style="margin-top: 20px; font-size: 1rem; opacity: 0.8;">
-                                Security: Critical | Speed: Variable | Range: Global
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 6: Technology Comparison -->
-        <div class="slide" id="slide6">
-            <h1 class="slide-title">Technology Comparison</h1>
-            <div class="slide-content">
-                <div class="points-container">
-                    <div class="point">
-                        <h3><span class="icon">📊</span> Network Technology Matrix</h3>
-                        <table class="comparison-table">
-                            <thead>
-                                <tr>
-                                    <th>Network Type</th>
-                                    <th>Key Tech</th>
-                                    <th>Max Speed</th>
-                                    <th>Security Level</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>PAN</td>
-                                    <td>Bluetooth 5.3, NFC</td>
-                                    <td>3 Mbps</td>
-                                    <td>⭐⭐☆☆☆</td>
-                                </tr>
-                                <tr>
-                                    <td>LAN</td>
-                                    <td>Wi-Fi 6E, 10GbE</td>
-                                    <td>10 Gbps</td>
-                                    <td>⭐⭐⭐⭐☆</td>
-                                </tr>
-                                <tr>
-                                    <td>MAN</td>
-                                    <td>Fiber, WiMAX</td>
-                                    <td>10 Gbps</td>
-                                    <td>⭐⭐⭐☆☆</td>
-                                </tr>
-                                <tr>
-                                    <td>WAN</td>
-                                    <td>MPLS, Satellite</td>
-                                    <td>100 Gbps+</td>
-                                    <td>⭐⭐⭐⭐⭐</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="point">
-                        <h3><span class="icon">📈</span> Evolution Timeline</h3>
-                        <ul>
-                            <li><strong>1990s:</strong> Dial-up, Token Ring</li>
-                            <li><strong>2000s:</strong> Broadband, Wi-Fi</li>
-                            <li><strong>2010s:</strong> 4G, Fiber, Cloud</li>
-                            <li><strong>2020s:</strong> 5G, Wi-Fi 6, SD-WAN</li>
-                            <li><strong>Future:</strong> 6G, Quantum, Starlink</li>
-                        </ul>
-                    </div>
-                    <div class="point">
-                        <h3><span class="icon">⚖️</span> Trade-offs</h3>
-                        <ul>
-                            <li>Speed vs. Distance</li>
-                            <li>Security vs. Convenience</li>
-                            <li>Cost vs. Performance</li>
-                            <li>Control vs. Scalability</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="image-container">
-                    <div class="image-placeholder">
-                        <div>
-                            <h3>📡 Technology Evolution</h3>
-                            <p>From dial-up to 5G</p>
-                            <div style="margin-top: 20px; font-size: 4rem;">⌛→⚡</div>
-                            <div style="margin-top: 20px; font-size: 2rem;">
-                                <span style="opacity: 0.5;">📞</span> →
-                                <span>📶</span> →
-                                <span style="color: #4fc3f7;">🚀</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 7: Security Deep Dive -->
-        <div class="slide" id="slide7">
-            <h1 class="slide-title">Security Across Networks</h1>
-            <div class="slide-content">
-                <div class="points-container">
-                    <div class="point">
-                        <h3><span class="icon">🛡️</span> Security Hierarchy</h3>
-                        <ul>
-                            <li><strong>PAN:</strong> Physical proximity, Pairing codes</li>
-                            <li><strong>LAN:</strong> MAC filtering, WPA3, VLANs</li>
-                            <li><strong>MAN:</strong> MPLS VPNs, BGP security</li>
-                            <li><strong>WAN:</strong> IPsec, DDoS protection, Zero Trust</li>
-                        </ul>
-                    </div>
-                    <div class="point">
-                        <h3><span class="icon">🎯</span> Common Threats</h3>
-                        <ul>
-                            <li>PAN: Bluejacking, Eavesdropping</li>
-                            <li>LAN: Rogue APs, ARP spoofing</li>
-                            <li>MAN: Fiber tapping, BGP hijacking</li>
-                            <li>WAN: DDoS, Nation-state attacks</li>
-                        </ul>
-                    </div>
-                    <div class="point">
-                        <h3><span class="icon">🔐</span> Best Practices</h3>
-                        <ul>
-                            <li>Always use strongest available encryption</li>
-                            <li>Regular firmware updates</li>
-                            <li>Network segmentation</li>
-                            <li>Multi-factor authentication</li>
-                            <li>Continuous monitoring</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="image-container">
-                    <div class="image-placeholder">
-                        <div>
-                            <h3>🔒 Security Layers</h3>
-                            <p>Multiple layers of protection</p>
-                            <div style="margin-top: 20px; font-size: 4rem;">🛡️🛡️🛡️</div>
-                            <div style="margin-top: 20px; font-size: 1.5rem;">
-                                Encryption | Authentication | Monitoring
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 8: Mega Quiz -->
-        <div class="slide" id="slide8">
-            <h1 class="slide-title">Network Knowledge Challenge!</h1>
-            <div class="slide-content">
-                <div class="points-container">
-                    <div class="point">
-                        <h3><span class="icon">🧠</span> Test Your Network IQ</h3>
-                        <p>Answer these questions to test your knowledge:</p>
-                    </div>
-                    
-                    <!-- Question 1 -->
-                    <div class="point">
-                        <p><strong>1. Which network uses "pairing codes" as primary security?</strong></p>
-                        <div class="quiz-option" data-question="1" data-answer="PAN">PAN</div>
-                        <div class="quiz-option" data-question="1" data-answer="LAN">LAN</div>
-                        <div class="quiz-option" data-question="1" data-answer="WAN">WAN</div>
-                    </div>
-                    
-                    <!-- Question 2 -->
-                    <div class="point">
-                        <p><strong>2. WiMAX technology is primarily used in which network?</strong></p>
-                        <div class="quiz-option" data-question="2" data-answer="MAN">MAN</div>
-                        <div class="quiz-option" data-question="2" data-answer="PAN">PAN</div>
-                        <div class="quiz-option" data-question="2" data-answer="LAN">LAN</div>
-                    </div>
-                    
-                    <!-- Question 3 -->
-                    <div class="point">
-                        <p><strong>3. Which network has the highest security requirement?</strong></p>
-                        <div class="quiz-option" data-question="3" data-answer="WAN">WAN</div>
-                        <div class="quiz-option" data-question="3" data-answer="PAN">PAN</div>
-                        <div class="quiz-option" data-question="3" data-answer="LAN">LAN</div>
-                    </div>
-                    
-                    <!-- Question 4 (Humor) -->
-                    <div class="point">
-                        <div class="quiz-humor">
-                            <p><strong>4. Your smartwatch won't connect to your phone. You start blaming:</strong></p>
-                            <div style="font-style: italic; color: #333; margin: 10px 0;">
-                                "The network gremlins are at it again! Or maybe it's PAN-demonium?"
-                            </div>
-                        </div>
-                        <div class="quiz-option" data-question="4" data-answer="PAN">PAN Issues</div>
-                        <div class="quiz-option" data-question="4" data-answer="LAN">LAN Gremlins</div>
-                        <div class="quiz-option" data-question="4" data-answer="MAN">MAN-agement Problem</div>
-                    </div>
-                </div>
-                <div class="image-container">
-                    <div class="image-placeholder">
-                        <div>
-                            <h3>🎯 Quiz Time!</h3>
-                            <p>How well do you know networks?</p>
-                            <div style="margin-top: 20px; font-size: 5rem;">🧠</div>
-                            <div id="quiz-result" style="margin-top: 20px; font-size: 1.2rem;"></div>
-                            <div id="score-display" style="margin-top: 20px; font-size: 1.5rem; font-weight: bold;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 9: Advanced Quiz -->
-        <div class="slide" id="slide9">
-            <h1 class="slide-title">Advanced Technical Quiz</h1>
-            <div class="slide-content">
-                <div class="points-container">
-                    <div class="point">
-                        <h3><span class="icon">⚡</span> Technical Deep Dive</h3>
-                        <p>Advanced questions for network enthusiasts:</p>
-                    </div>
-                    
-                    <!-- Question 5 -->
-                    <div class="point">
-                        <p><strong>5. Which technology uses DWDM for high capacity?</strong></p>
-                        <div class="quiz-option" data-question="5" data-answer="MAN">MAN/WAN Backbone</div>
-                        <div class="quiz-option" data-question="5" data-answer="PAN">PAN Bluetooth</div>
-                        <div class="quiz-option" data-question="5" data-answer="LAN">LAN Ethernet</div>
-                    </div>
-                    
-                    <!-- Question 6 -->
-                    <div class="point">
-                        <p><strong>6. BGP security is crucial for which network?</strong></p>
-                        <div class="quiz-option" data-question="6" data-answer="WAN">WAN/Internet</div>
-                        <div class="quiz-option" data-question="6" data-answer="LAN">LAN Routing</div>
-                        <div class="quiz-option" data-question="6" data-answer="MAN">MAN Services</div>
-                    </div>
-                    
-                    <!-- Question 7 -->
-                    <div class="point">
-                        <p><strong>7. What's the maximum speed of Bluetooth 5.3?</strong></p>
-                        <div class="quiz-option" data-question="7" data-answer="3">3 Mbps</div>
-                        <div class="quiz-option" data-question="7" data-answer="24">24 Mbps</div>
-                        <div class="quiz-option" data-question="7" data-answer="100">100 Mbps</div>
-                    </div>
-                    
-                    <!-- Question 8 (Humor) -->
-                    <div class="point">
-                        <div class="quiz-humor">
-                            <p><strong>8. Your internet is down during a game. You complain:</strong></p>
-                            <div style="font-style: italic; color: #333; margin: 10px 0;">
-                                "This WAN-derful connection is letting me down! Is it a LAN-guage barrier?"
-                            </div>
-                        </div>
-                        <div class="quiz-option" data-question="8" data-answer="WAN">WAN Connectivity Issue</div>
-                        <div class="quiz-option" data-question="8" data-answer="LAN">LAN Router Problem</div>
-                        <div class="quiz-option" data-question="8" data-answer="PAN">PAN-cake Breakfast Interference</div>
-                    </div>
-                </div>
-                <div class="image-container">
-                    <div class="image-placeholder">
-                        <div>
-                            <h3>🔧 Tech Quiz</h3>
-                            <p>Advanced network knowledge</p>
-                            <div style="margin-top: 20px; font-size: 5rem;">⚡</div>
-                            <div id="advanced-quiz-result" style="margin-top: 20px; font-size: 1.2rem;"></div>
-                            <div id="advanced-score" style="margin-top: 20px; font-size: 1.5rem; font-weight: bold;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 10: Conclusion -->
-        <div class="slide" id="slide10">
-            <div style="text-align: center; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                <h1 style="font-size: 4rem; color: #4fc3f7; margin-bottom: 30px; animation: pulse 2s infinite;">Mission Complete! 🚀</h1>
-                <div style="font-size: 1.5rem; margin-bottom: 20px; color: #a5d6a7;">You've navigated the network universe!</div>
-                
-                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; max-width: 800px; margin: 20px 0;">
-                    <h3 style="margin-bottom: 20px; color: #4fc3f7;">🎓 Key Takeaways:</h3>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; text-align: left;">
-                        <div style="padding: 15px; background: rgba(255,107,107,0.1); border-radius: 10px;">
-                            <strong style="color: #ff8a80;">🔒 Security Matters</strong><br>
-                            Different networks need different protection
-                        </div>
-                        <div style="padding: 15px; background: rgba(78,205,196,0.1); border-radius: 10px;">
-                            <strong style="color: #a5d6a7;">⚡ Technology Evolves</strong><br>
-                            From Bluetooth to quantum networks
-                        </div>
-                        <div style="padding: 15px; background: rgba(255,209,102,0.1); border-radius: 10px;">
-                            <strong style="color: #ffd166;">📈 Scale Impacts Design</strong><br>
-                            Size determines technology choices
-                        </div>
-                        <div style="padding: 15px; background: rgba(17,138,178,0.1); border-radius: 10px;">
-                            <strong style="color: #80deea;">🌐 Everything Connects</strong><br>
-                            PAN → LAN → MAN → WAN = The Internet
-                        </div>
-                    </div>
-                </div>
-                
-                <div style="margin-top: 40px; font-size: 1.2rem; opacity: 0.8;">
-                    <div style="margin-bottom: 10px;">Final Score: <span id="final-score" style="font-weight: bold; color: #4fc3f7;">0/8</span></div>
-                    <div>Network Types Mastery: <span id="mastery-level" style="font-weight: bold; color: #ffd166;">Beginner</span></div>
-                </div>
-                
-                <div style="margin-top: 30px; font-size: 1rem; opacity: 0.7;">
-                    Presentation Complete | Reload page to restart
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navigation Controls -->
-    <div class="slide-indicator">
-        Slide <span id="current-slide">1</span> of <span id="total-slides">10</span>
-    </div>
-
-    <div class="nav-controls">
-        <button class="nav-btn" id="prev-btn">← Previous</button>
-        <button class="nav-btn" id="next-btn">Next →</button>
-        <button class="nav-btn" id="restart-btn">Restart ↺</button>
+        <footer class="footer">
+            <p>Network Classification Presentation | Created with HTML, CSS & JavaScript</p>
+            <p>© 2024 Network Architecture Overview | For educational purposes</p>
+        </footer>
     </div>
 
     <script>
-        class EnhancedPresentation {
-            constructor() {
-                this.currentSlide = 1;
-                this.totalSlides = 10;
-                this.isAnimating = false;
-                this.quizAnswers = {
-                    1: "PAN",
-                    2: "MAN",
-                    3: "WAN",
-                    4: "PAN",
-                    5: "MAN",
-                    6: "WAN",
-                    7: "3",
-                    8: "WAN"
-                };
-                this.userScore = 0;
-                this.maxScore = 8;
-                
-                this.init();
-            }
-            
-            init() {
-                this.updateSlideIndicator();
-                this.setupEventListeners();
-                this.showSlide(1);
-                this.setupQuiz();
-            }
-            
-            setupEventListeners() {
-                document.getElementById('prev-btn').addEventListener('click', () => this.prevSlide());
-                document.getElementById('next-btn').addEventListener('click', () => this.nextSlide());
-                document.getElementById('restart-btn').addEventListener('click', () => this.restartPresentation());
-                
-                // Keyboard navigation
-                document.addEventListener('keydown', (e) => {
-                    if (this.isAnimating) return;
-                    
-                    switch(e.key) {
-                        case 'ArrowLeft':
-                        case 'PageUp':
-                            this.prevSlide();
-                            break;
-                        case 'ArrowRight':
-                        case 'PageDown':
-                        case ' ':
-                            this.nextSlide();
-                            break;
-                        case 'Home':
-                            this.showSlide(1);
-                            break;
-                        case 'End':
-                            this.showSlide(this.totalSlides);
-                            break;
-                    }
-                });
-            }
-            
-            setupQuiz() {
-                const quizOptions = document.querySelectorAll('.quiz-option');
-                quizOptions.forEach(option => {
-                    option.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('correct') || e.target.classList.contains('wrong')) {
-                            return; // Already answered
-                        }
-                        
-                        const question = e.target.dataset.question;
-                        const selectedAnswer = e.target.dataset.answer;
-                        const correctAnswer = this.quizAnswers[question];
-                        
-                        // Mark all options for this question
-                        const allOptions = document.querySelectorAll(`[data-question="${question}"]`);
-                        allOptions.forEach(opt => {
-                            if (opt.dataset.answer === correctAnswer) {
-                                opt.classList.add('correct');
-                                if (opt === e.target) {
-                                    this.userScore++;
-                                }
-                            } else if (opt === e.target) {
-                                opt.classList.add('wrong');
-                            }
-                        });
-                        
-                        // Update quiz result
-                        this.updateQuizResult();
-                    });
-                });
-            }
-            
-            updateQuizResult() {
-                const resultElement = document.getElementById('quiz-result') || document.getElementById('advanced-quiz-result');
-                const scoreElement = document.getElementById('score-display') || document.getElementById('advanced-score');
-                
-                if (resultElement) {
-                    const scoreText = `Score: ${this.userScore}/${this.maxScore}`;
-                    let feedback = '';
-                    
-                    if (this.userScore === this.maxScore) {
-                        feedback = '🎉 Perfect! You are a Network Guru!';
-                    } else if (this.userScore >= this.maxScore * 0.75) {
-                        feedback = '👍 Excellent! You know your networks well!';
-                    } else if (this.userScore >= this.maxScore * 0.5) {
-                        feedback = '👌 Good job! Solid understanding!';
-                    } else {
-                        feedback = '💡 Keep learning! Review the slides!';
-                    }
-                    
-                    resultElement.innerHTML = `
-                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
-                            <strong>${scoreText}</strong><br>
-                            ${feedback}
-                        </div>
-                    `;
-                    
-                    if (scoreElement) {
-                        scoreElement.textContent = scoreText;
-                    }
-                }
-                
-                // Update final score on conclusion slide
-                if (this.currentSlide === 10) {
-                    this.updateFinalScore();
-                }
-            }
-            
-            updateFinalScore() {
-                const finalScoreElement = document.getElementById('final-score');
-                const masteryElement = document.getElementById('mastery-level');
-                
-                if (finalScoreElement) {
-                    finalScoreElement.textContent = `${this.userScore}/${this.maxScore}`;
-                    
-                    let mastery = '';
-                    if (this.userScore === this.maxScore) {
-                        mastery = 'Network Ninja 🥷';
-                    } else if (this.userScore >= 6) {
-                        mastery = 'Network Pro 🎓';
-                    } else if (this.userScore >= 4) {
-                        mastery = 'Network Explorer 🧭';
-                    } else {
-                        mastery = 'Network Novice 👶';
-                    }
-                    
-                    if (masteryElement) {
-                        masteryElement.textContent = mastery;
-                    }
-                }
-            }
-            
-            showSlide(slideNumber) {
-                if (this.isAnimating || slideNumber < 1 || slideNumber > this.totalSlides) {
-                    return;
-                }
-                
-                this.isAnimating = true;
-                
-                // Get current and next slide elements
-                const currentSlideElement = document.querySelector('.slide.active');
-                const nextSlideElement = document.getElementById(`slide${slideNumber}`);
-                
-                // Determine animation direction
-                const direction = slideNumber > this.currentSlide ? 'right' : 'left';
-                
-                // Animate out current slide
-                if (currentSlideElement) {
-                    currentSlideElement.classList.remove('active');
-                    currentSlideElement.classList.add(direction === 'right' ? 'exit-left' : 'exit-right');
-                    
-                    // Remove exit class after animation
-                    setTimeout(() => {
-                        currentSlideElement.classList.remove('exit-left', 'exit-right');
-                    }, 800);
-                }
-                
-                // Animate in next slide
-                setTimeout(() => {
-                    nextSlideElement.classList.add('active');
-                    this.currentSlide = slideNumber;
-                    this.updateSlideIndicator();
-                    
-                    // Animate points in the new slide
-                    this.animatePoints(nextSlideElement);
-                    
-                    // Update final score if on conclusion slide
-                    if (slideNumber === 10) {
-                        this.updateFinalScore();
-                    }
-                    
-                    this.isAnimating = false;
-                }, 400);
-            }
-            
-            animatePoints(slideElement) {
-                const points = slideElement.querySelectorAll('.point');
-                const title = slideElement.querySelector('.slide-title');
-                
-                // Reset animations
-                points.forEach(point => {
-                    point.classList.remove('visible');
+        // Add interactivity to network cards
+        document.querySelectorAll('.network-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all cards
+                document.querySelectorAll('.network-card').forEach(c => {
+                    c.classList.remove('active');
                 });
                 
-                if (title && !title.classList.contains('animate')) {
-                    title.classList.add('animate');
-                }
+                // Add active class to clicked card
+                this.classList.add('active');
                 
-                // Animate points with delay
-                setTimeout(() => {
-                    points.forEach((point, index) => {
-                        setTimeout(() => {
-                            point.classList.add('visible');
-                        }, index * 300);
-                    });
-                }, 500);
-            }
-            
-            nextSlide() {
-                if (this.currentSlide < this.totalSlides) {
-                    this.showSlide(this.currentSlide + 1);
-                }
-            }
-            
-            prevSlide() {
-                if (this.currentSlide > 1) {
-                    this.showSlide(this.currentSlide - 1);
-                }
-            }
-            
-            restartPresentation() {
-                this.userScore = 0;
-                this.showSlide(1);
+                // Add visual feedback
+                const networkType = this.classList.contains('pan') ? 'PAN' : 
+                                   this.classList.contains('lan') ? 'LAN' : 
+                                   this.classList.contains('man') ? 'MAN' : 'WAN';
                 
-                // Reset quiz options
-                document.querySelectorAll('.quiz-option').forEach(option => {
-                    option.classList.remove('correct', 'wrong');
-                });
-                
-                // Clear results
-                const resultElements = document.querySelectorAll('[id*="quiz-result"], [id*="score"]');
-                resultElements.forEach(el => el.innerHTML = '');
-                
-                this.updateQuizResult();
-            }
+                console.log(`Selected network type: ${networkType}`);
+            });
+        });
+
+        // Add hover effect to table rows
+        document.querySelectorAll('.comparison-table tr').forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.01)';
+                this.style.transition = 'transform 0.2s ease';
+            });
             
-            updateSlideIndicator() {
-                document.getElementById('current-slide').textContent = this.currentSlide;
-                document.getElementById('total-slides').textContent = this.totalSlides;
-            }
-        }
-        
-        // Initialize presentation when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            const presentation = new EnhancedPresentation();
+            row.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Add animation to scale markers
+        const scaleMarkers = document.querySelectorAll('.scale-marker');
+        scaleMarkers.forEach(marker => {
+            marker.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(-50%) scale(1.1)';
+            });
             
-            // Add CSS animation for pulsing effect
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes pulse {
-                    0% { transform: scale(1); }
-                    50% { transform: scale(1.05); }
-                    100% { transform: scale(1); }
-                }
-            `;
-            document.head.appendChild(style);
+            marker.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(-50%) scale(1)';
+            });
         });
     </script>
 </body>
-                                </html>
+</html>
